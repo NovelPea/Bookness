@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f7f3">
-  <title>Bookness — Make your next book cover</title>
+  <title>Bookness — Create cover artwork</title>
   <style>
     :root {
       --ink: #27251f;
@@ -25,7 +25,6 @@
 
     button, input, select { font: inherit; }
 
-    /* Mobile-only layout */
     @media (min-width: 600px) {
       body::before {
         content: "Bookness is designed for mobile. Open this page on a phone or narrow your browser window.";
@@ -40,12 +39,13 @@
         text-align: center;
         font-size: 18px;
       }
-
       body > * { visibility: hidden; }
       body::before { visibility: visible; }
     }
 
-    /* Login / sign-up */
+    [hidden] { display: none !important; }
+
+    /* Login and sign-up */
     .auth-screen {
       position: fixed;
       inset: 0;
@@ -63,7 +63,7 @@
       padding: 26px 22px;
       border: 1px solid var(--line);
       border-radius: 16px;
-      background: #fff;
+      background: white;
       box-shadow: 0 10px 35px rgba(46, 40, 28, .07);
     }
 
@@ -103,9 +103,7 @@
       box-shadow: 0 0 0 3px rgba(215, 105, 76, .12);
     }
 
-    .confirm-label,
-    .confirm-input { display: none; }
-
+    .confirm-label, .confirm-input { display: none; }
     .auth-card.signing-up .confirm-label,
     .auth-card.signing-up .confirm-input { display: block; }
 
@@ -144,13 +142,14 @@
       font-weight: 700;
     }
 
-    /* Header and app */
+    /* Header and workspace */
     .topbar {
-      height: 56px;
+      min-height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
+      gap: 10px;
+      padding: 0 16px;
       border-bottom: 1px solid var(--line);
       background: white;
     }
@@ -159,6 +158,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
+      flex-shrink: 0;
       font-size: 19px;
       font-weight: 800;
       letter-spacing: -1px;
@@ -177,11 +177,12 @@
 
     .top-note {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 10px;
+      text-align: right;
     }
 
     .logout-button {
-      padding: 7px 10px;
+      padding: 7px 9px;
       border: 1px solid var(--line);
       border-radius: 8px;
       color: var(--ink);
@@ -195,10 +196,10 @@
       width: 100%;
       max-width: 480px;
       margin: 0 auto;
-      padding: 25px 16px 38px;
+      padding: 23px 15px 38px;
     }
 
-    .intro { margin-bottom: 22px; }
+    .intro { margin-bottom: 18px; }
 
     .eyebrow {
       color: var(--accent);
@@ -221,10 +222,41 @@
       font-size: 13px;
     }
 
+    /* Creation tabs */
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin: 19px 0;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #efeee9;
+    }
+
+    .tab-button {
+      min-height: 43px;
+      padding: 7px 4px;
+      border: 0;
+      border-radius: 8px;
+      color: #69665e;
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .tab-button[aria-selected="true"] {
+      color: var(--ink);
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,.09);
+    }
+
     .workspace {
       display: flex;
       flex-direction: column;
-      gap: 25px;
+      gap: 23px;
     }
 
     .panel {
@@ -255,8 +287,7 @@
 
     .field { margin-bottom: 14px; }
 
-    .field > label,
-    .field-label {
+    .field > label, .field-label {
       display: block;
       margin-bottom: 6px;
       color: #49463f;
@@ -325,7 +356,7 @@
 
     .upload input { display: none; }
 
-    /* Cover preview */
+    /* Preview */
     .preview-area {
       order: 1;
       display: flex;
@@ -363,8 +394,7 @@
       box-shadow: 0 12px 30px rgba(45, 33, 28, .2);
     }
 
-    .cover::before,
-    .cover::after {
+    .cover::before, .cover::after {
       position: absolute;
       z-index: -1;
       content: "";
@@ -425,13 +455,34 @@
 
     .cover[data-style="photo"]::after { display: none; }
 
+    .cover[data-format="game"] {
+      aspect-ratio: 1 / 1;
+      width: min(75vw, 290px);
+    }
+
+    .cover[data-format="promo"] {
+      aspect-ratio: 4 / 5;
+      width: min(75vw, 290px);
+    }
+
+    .cover[data-format="game"] .cover-title {
+      font: 800 clamp(30px, 9vw, 42px)/.98 system-ui, sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 3px 12px rgba(0,0,0,.25);
+    }
+
+    .cover[data-format="promo"] .cover-title {
+      font-size: clamp(26px, 7vw, 35px);
+    }
+
     .cover-kicker {
       margin-bottom: 12px;
       font-size: 8px;
       font-weight: 750;
       letter-spacing: 2.5px;
       text-transform: uppercase;
-      opacity: .8;
+      opacity: .86;
     }
 
     .cover-title {
@@ -447,7 +498,7 @@
       min-height: 18px;
       margin-top: 10px;
       font: 11px/1.4 Georgia, serif;
-      opacity: .87;
+      opacity: .9;
     }
 
     .cover-rule {
@@ -470,6 +521,8 @@
     .cover[data-style="minimal"] .cover-title { font-weight: 700; }
     .cover[data-style="minimal"] .cover-author { color: #554830; }
     .cover[data-style="midnight"] .cover-title { font-style: italic; }
+    .cover[data-format="game"] .cover-author { letter-spacing: 2px; }
+    .cover[data-format="promo"] .cover-kicker { letter-spacing: 3px; }
 
     .download {
       width: min(100%, 340px);
@@ -485,9 +538,6 @@
       touch-action: manipulation;
     }
 
-    .download:active,
-    .auth-submit:active { transform: scale(.99); }
-
     .tip {
       max-width: 330px;
       margin: 10px 0 0;
@@ -495,8 +545,6 @@
       text-align: center;
       font-size: 11px;
     }
-
-    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
@@ -505,10 +553,9 @@
       <div class="brand auth-brand">
         <span class="brand-mark">b</span> bookness
       </div>
-
       <h1 id="authTitle">Welcome back</h1>
       <p class="auth-description" id="authDescription">
-        Log in to keep creating beautiful book covers.
+        Log in to keep creating beautiful artwork.
       </p>
 
       <label for="authEmail">Email</label>
@@ -519,14 +566,11 @@
       <input id="authPassword" type="password" placeholder="At least 6 characters"
              minlength="6" autocomplete="current-password" required>
 
-      <label class="confirm-label" id="confirmLabel" for="authConfirmPassword">
-        Confirm password
-      </label>
+      <label class="confirm-label" for="authConfirmPassword">Confirm password</label>
       <input class="confirm-input" id="authConfirmPassword" type="password"
              minlength="6" autocomplete="new-password">
 
       <p class="auth-message" id="authMessage" role="alert"></p>
-
       <button class="auth-submit" id="authSubmit" type="submit">Log in</button>
 
       <p class="auth-toggle">
@@ -537,52 +581,61 @@
   </div>
 
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark">b</span> bookness
-    </div>
-    <div class="top-note">Your story, cover-ready</div>
-    <button class="logout-button" id="logoutButton" type="button" hidden>
-      Log out
-    </button>
+    <div class="brand"><span class="brand-mark">b</span> bookness</div>
+    <div class="top-note">Create artwork for your next big idea</div>
+    <button class="logout-button" id="logoutButton" type="button" hidden>Log out</button>
   </header>
 
   <main class="app">
     <section class="intro">
-      <div class="eyebrow">Your story, cover-ready</div>
-      <h1>Make a cover worth picking up.</h1>
-      <p>Choose a style, add your details, and download your book cover.</p>
+      <div class="eyebrow">Your creative studio</div>
+      <h1>Make artwork worth looking at.</h1>
+      <p>Choose what you’re making, customize the design, and download it.</p>
     </section>
 
+    <nav class="tabs" role="tablist" aria-label="Artwork type">
+      <button class="tab-button" id="bookTab" type="button" role="tab"
+              aria-selected="true" aria-controls="editorPanel" data-format="book">
+        Book cover
+      </button>
+      <button class="tab-button" id="gameTab" type="button" role="tab"
+              aria-selected="false" aria-controls="editorPanel" data-format="game">
+        Game cover
+      </button>
+      <button class="tab-button" id="promoTab" type="button" role="tab"
+              aria-selected="false" aria-controls="editorPanel" data-format="promo">
+        Promotional artwork
+      </button>
+    </nav>
+
     <div class="workspace">
-      <section class="panel" aria-labelledby="details-heading">
+      <section class="panel" id="editorPanel" aria-labelledby="detailsHeading">
         <div class="panel-heading">
-          <h2 id="details-heading">Your book details</h2>
-          <span class="step">01 / CUSTOMIZE</span>
+          <h2 id="detailsHeading">Book cover details</h2>
+          <span class="step">CUSTOMIZE</span>
         </div>
 
         <div class="field">
-          <label for="titleInput">Book title</label>
+          <label for="titleInput" id="titleLabel">Book title</label>
           <input id="titleInput" type="text" maxlength="52"
-                 value="The Art of Almost" placeholder="Your book title">
+                 value="The Art of Almost" placeholder="Your title">
         </div>
 
         <div class="field">
-          <label for="subtitleInput">
-            Subtitle <span style="font-weight:400;color:#999">(optional)</span>
-          </label>
+          <label for="subtitleInput" id="subtitleLabel">Subtitle (optional)</label>
           <input id="subtitleInput" type="text" maxlength="80"
                  value="A story about finding your way" placeholder="Add a subtitle">
         </div>
 
         <div class="field">
-          <label for="authorInput">Author name</label>
+          <label for="authorInput" id="authorLabel">Author name</label>
           <input id="authorInput" type="text" maxlength="38"
-                 value="JAMIE MORGAN" placeholder="Your name">
+                 value="JAMIE MORGAN" placeholder="Your name or brand">
         </div>
 
         <div class="two-col">
           <div class="field">
-            <label for="styleSelect">Cover style</label>
+            <label for="styleSelect">Visual style</label>
             <select id="styleSelect">
               <option value="classic">Warm &amp; classic</option>
               <option value="minimal">Quiet minimal</option>
@@ -591,9 +644,8 @@
               <option value="photo">Your photo</option>
             </select>
           </div>
-
           <div class="field">
-            <label for="genreInput">Genre</label>
+            <label for="genreInput" id="categoryLabel">Genre</label>
             <select id="genreInput">
               <option>Literary fiction</option>
               <option>Romance</option>
@@ -614,7 +666,6 @@
               <span class="color-hint">Main color</span>
             </div>
           </div>
-
           <div class="field">
             <span class="field-label">Color two</span>
             <div class="color-row">
@@ -632,13 +683,13 @@
         </div>
       </section>
 
-      <section class="preview-area" aria-label="Live book cover preview">
+      <section class="preview-area" aria-label="Live artwork preview">
         <div class="preview-label">
-          <span>LIVE PREVIEW</span>
+          <span id="previewLabel">BOOK COVER PREVIEW</span>
           <span id="genreLabel">Literary fiction</span>
         </div>
 
-        <div class="cover" id="cover" data-style="classic">
+        <div class="cover" id="cover" data-style="classic" data-format="book">
           <div class="cover-kicker">LITERARY FICTION</div>
           <h2 class="cover-title" id="coverTitle">The Art of Almost</h2>
           <div class="cover-subtitle" id="coverSubtitle">A story about finding your way</div>
@@ -647,9 +698,9 @@
         </div>
 
         <button class="download" id="downloadButton" type="button">
-          ↓ &nbsp; Download cover as PNG
+          ↓ &nbsp; Download artwork as PNG
         </button>
-        <p class="tip">Your cover is created in your browser. Add a photo or try another style.</p>
+        <p class="tip">Your artwork is created in your browser. Try another style or add a photo.</p>
       </section>
     </div>
   </main>
@@ -658,21 +709,109 @@
     const $ = (selector) => document.querySelector(selector);
     const cover = $("#cover");
     let uploadedImage = "";
+    let currentFormat = "book";
+
+    const formatSettings = {
+      book: {
+        heading: "Book cover details",
+        titleLabel: "Book title",
+        titlePlaceholder: "Your book title",
+        subtitleLabel: "Subtitle (optional)",
+        authorLabel: "Author name",
+        categoryLabel: "Genre",
+        categories: ["Literary fiction", "Romance", "Mystery", "Fantasy", "Nonfiction", "Poetry", "Young adult"],
+        title: "The Art of Almost",
+        subtitle: "A story about finding your way",
+        author: "JAMIE MORGAN",
+        category: "Literary fiction"
+      },
+      game: {
+        heading: "Game cover details",
+        titleLabel: "Game title",
+        titlePlaceholder: "Your game title",
+        subtitleLabel: "Tagline (optional)",
+        authorLabel: "Studio or creator",
+        categoryLabel: "Game type",
+        categories: ["Adventure", "Fantasy RPG", "Action", "Puzzle", "Strategy", "Horror", "Indie"],
+        title: "MOONFALL",
+        subtitle: "A world beyond the stars",
+        author: "NORTHSTAR STUDIO",
+        category: "Adventure"
+      },
+      promo: {
+        heading: "Promotional artwork details",
+        titleLabel: "Headline",
+        titlePlaceholder: "Your promotional headline",
+        subtitleLabel: "Supporting text (optional)",
+        authorLabel: "Brand or creator",
+        categoryLabel: "Artwork type",
+        categories: ["New release", "Book launch", "Event", "Special offer", "Announcement", "Social post"],
+        title: "A STORY TO REMEMBER",
+        subtitle: "Discover your next favorite",
+        author: "BOOKNESS PICKS",
+        category: "New release"
+      }
+    };
+
+    function setCategories(items, selected) {
+      const select = $("#genreInput");
+      select.replaceChildren();
+
+      items.forEach((item) => {
+        const option = document.createElement("option");
+        option.textContent = item;
+        select.appendChild(option);
+      });
+
+      select.value = selected;
+    }
+
+    function setFormat(format) {
+      currentFormat = format;
+      const settings = formatSettings[format];
+
+      document.querySelectorAll(".tab-button").forEach((button) => {
+        const active = button.dataset.format === format;
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
+      });
+
+      $("#detailsHeading").textContent = settings.heading;
+      $("#titleLabel").textContent = settings.titleLabel;
+      $("#titleInput").placeholder = settings.titlePlaceholder;
+      $("#subtitleLabel").textContent = settings.subtitleLabel;
+      $("#authorLabel").textContent = settings.authorLabel;
+      $("#categoryLabel").textContent = settings.categoryLabel;
+
+      $("#titleInput").value = settings.title;
+      $("#subtitleInput").value = settings.subtitle;
+      $("#authorInput").value = settings.author;
+      setCategories(settings.categories, settings.category);
+
+      cover.dataset.format = format;
+      $("#previewLabel").textContent =
+        format === "book" ? "BOOK COVER PREVIEW" :
+        format === "game" ? "GAME COVER PREVIEW" :
+        "PROMOTIONAL ARTWORK PREVIEW";
+
+      updateCover();
+    }
 
     function updateCover() {
-      const title = $("#titleInput").value.trim() || "Your Book Title";
+      const title = $("#titleInput").value.trim() || "Your Title";
       const subtitle = $("#subtitleInput").value.trim();
       const author = $("#authorInput").value.trim() || "YOUR NAME";
       const style = $("#styleSelect").value;
-      const genre = $("#genreInput").value;
+      const category = $("#genreInput").value;
 
       $("#coverTitle").textContent = title;
       $("#coverSubtitle").textContent = subtitle;
       $("#coverAuthor").textContent = author;
-      $("#genreLabel").textContent = genre;
-      $(".cover-kicker").textContent = genre.toUpperCase();
+      $("#genreLabel").textContent = category;
+      $(".cover-kicker").textContent = category.toUpperCase();
 
       cover.dataset.style = style;
+      cover.dataset.format = currentFormat;
       cover.style.setProperty("--cover-a", $("#colorA").value);
       cover.style.setProperty("--cover-b", $("#colorB").value);
 
@@ -684,9 +823,16 @@
       }
     }
 
-    document
-      .querySelectorAll("#titleInput, #subtitleInput, #authorInput, #styleSelect, #genreInput, #colorA, #colorB")
-      .forEach((element) => element.addEventListener("input", updateCover));
+    document.querySelectorAll(".tab-button").forEach((button) => {
+      button.addEventListener("click", () => setFormat(button.dataset.format));
+    });
+
+    document.querySelectorAll(
+      "#titleInput, #subtitleInput, #authorInput, #styleSelect, #genreInput, #colorA, #colorB"
+    ).forEach((element) => {
+      element.addEventListener("input", updateCover);
+      element.addEventListener("change", updateCover);
+    });
 
     $("#imageInput").addEventListener("change", (event) => {
       const file = event.target.files && event.target.files[0];
@@ -703,11 +849,7 @@
 
     function escapeXml(value) {
       return String(value).replace(/[<>&'"]/g, (char) => ({
-        "<": "&lt;",
-        ">": "&gt;",
-        "&": "&amp;",
-        "'": "&apos;",
-        '"': "&quot;"
+        "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;"
       }[char]));
     }
 
@@ -740,15 +882,19 @@
     }
 
     function coverSvg() {
-      const width = 900;
-      const height = 1350;
+      const format = currentFormat;
       const style = $("#styleSelect").value;
       const colorA = $("#colorA").value;
       const colorB = $("#colorB").value;
-      const title = $("#titleInput").value.trim() || "Your Book Title";
+      const title = $("#titleInput").value.trim() || "Your Title";
       const subtitle = $("#subtitleInput").value.trim();
       const author = $("#authorInput").value.trim() || "YOUR NAME";
-      const genre = $("#genreInput").value.toUpperCase();
+      const category = $("#genreInput").value.toUpperCase();
+
+      const width = format === "game" ? 1200 : 900;
+      const height = format === "game" ? 1200 : format === "promo" ? 1125 : 1350;
+      const background = format === "promo" ? "#5f443f" : "#70434d";
+      const centerX = width / 2;
 
       let bg = `
         <defs>
@@ -757,13 +903,13 @@
             <stop offset="1" stop-color="${colorB}"/>
           </linearGradient>
         </defs>
-        <rect width="900" height="1350" fill="url(#bg)"/>`;
+        <rect width="${width}" height="${height}" fill="url(#bg)"/>`;
 
       let textColor = "#fff8eb";
       let lineColor = "rgba(255,255,255,.42)";
 
       if (style === "minimal") {
-        bg = `<rect width="900" height="1350" fill="#e7d8b9"/>`;
+        bg = `<rect width="${width}" height="${height}" fill="#e7d8b9"/>`;
         textColor = "#25251f";
         lineColor = "rgba(40,35,25,.45)";
       } else if (style === "midnight") {
@@ -774,9 +920,9 @@
               <stop offset="1" stop-color="#131b32"/>
             </radialGradient>
           </defs>
-          <rect width="900" height="1350" fill="url(#bg)"/>
-          <circle cx="450" cy="480" r="220" fill="none"
-            stroke="#fff1c4" stroke-opacity=".5" stroke-width="2"/>`;
+          <rect width="${width}" height="${height}" fill="url(#bg)"/>
+          <circle cx="${centerX}" cy="${height * .36}" r="${width * .22}"
+            fill="none" stroke="#fff1c4" stroke-opacity=".5" stroke-width="3"/>`;
         textColor = "#fff7d9";
         lineColor = "rgba(255,247,217,.4)";
       } else if (style === "botanical") {
@@ -787,9 +933,11 @@
               <stop offset="1" stop-color="#34483e"/>
             </linearGradient>
           </defs>
-          <rect width="900" height="1350" fill="url(#bg)"/>
-          <path d="M710 1100 Q850 850 690 560 M710 900 Q530 820 570 680 M720 820 Q880 760 840 630"
-            fill="none" stroke="#edf0d2" stroke-opacity=".45" stroke-width="5"/>`;
+          <rect width="${width}" height="${height}" fill="url(#bg)"/>
+          <path d="M${width*.8} ${height*.8} Q${width*.95} ${height*.63} ${width*.77} ${height*.42}
+            M${width*.8} ${height*.68} Q${width*.6} ${height*.61} ${width*.64} ${height*.5}
+            M${width*.8} ${height*.61} Q${width*.98} ${height*.56} ${width*.93} ${height*.45}"
+            fill="none" stroke="#edf0d2" stroke-opacity=".45" stroke-width="6"/>`;
       }
 
       if (style === "photo" && uploadedImage) {
@@ -799,59 +947,61 @@
               <stop stop-color="#000" stop-opacity=".08"/>
               <stop offset="1" stop-color="#000" stop-opacity=".72"/>
             </linearGradient>
-            <clipPath id="clip"><rect width="900" height="1350"/></clipPath>
           </defs>
-          <image href="${uploadedImage}" width="900" height="1350"
-            preserveAspectRatio="xMidYMid slice" clip-path="url(#clip)"/>
-          <rect width="900" height="1350" fill="url(#shade)"/>`;
+          <image href="${uploadedImage}" width="${width}" height="${height}"
+            preserveAspectRatio="xMidYMid slice"/>
+          <rect width="${width}" height="${height}" fill="url(#shade)"/>`;
       }
 
-      const lines = wrapText(title, 20, 4);
-      const fontSize = lines.length > 2 ? 88 : 112;
-      const titleStart = 600 - ((lines.length - 1) * fontSize * .52);
+      const titleLines = wrapText(title, format === "game" ? 17 : 20, 4);
+      const titleSize = format === "game" ? 105 : titleLines.length > 2 ? 83 : 105;
+      const titleStart = height * .45 - ((titleLines.length - 1) * titleSize * .52);
 
-      const titleSvg = lines.map((line, index) => `
-        <text x="450" y="${titleStart + index * fontSize * 1.08}"
-          text-anchor="middle" font-family="Georgia,serif" font-size="${fontSize}"
-          fill="${textColor}">${escapeXml(line)}</text>
+      const titleSvg = titleLines.map((line, index) => `
+        <text x="${centerX}" y="${titleStart + index * titleSize * 1.08}"
+          text-anchor="middle" font-family="${format === "game" ? "Arial,sans-serif" : "Georgia,serif"}"
+          font-weight="${format === "game" ? "bold" : "normal"}"
+          font-size="${titleSize}" fill="${textColor}">${escapeXml(line)}</text>
       `).join("");
 
-      const subtitleLines = wrapText(subtitle, 48, 2);
+      const subtitleLines = wrapText(subtitle, 44, 2);
       const subtitleSvg = subtitleLines.map((line, index) => `
-        <text x="450"
-          y="${titleStart + lines.length * fontSize * 1.08 + 36 + index * 28}"
-          text-anchor="middle" font-family="Georgia,serif" font-size="25"
-          fill="${textColor}" opacity=".88">${escapeXml(line)}</text>
+        <text x="${centerX}"
+          y="${titleStart + titleLines.length * titleSize * 1.08 + 36 + index * 30}"
+          text-anchor="middle" font-family="Georgia,serif" font-size="26"
+          fill="${textColor}" opacity=".9">${escapeXml(line)}</text>
       `).join("");
+
+      const frameInset = format === "game" ? 38 : 40;
 
       return `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 900 1350">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"
+          viewBox="0 0 ${width} ${height}">
           ${bg}
-          <rect x="40" y="40" width="820" height="1270" fill="none"
-            stroke="${lineColor}" stroke-width="2"/>
-          <text x="450" y="175" text-anchor="middle" font-family="Arial,sans-serif"
-            font-size="20" letter-spacing="8" fill="${textColor}" opacity=".85">${escapeXml(genre)}</text>
+          <rect x="${frameInset}" y="${frameInset}" width="${width - frameInset * 2}"
+            height="${height - frameInset * 2}" fill="none" stroke="${lineColor}" stroke-width="2"/>
+          <text x="${centerX}" y="${height * .14}" text-anchor="middle"
+            font-family="Arial,sans-serif" font-size="22" letter-spacing="7"
+            fill="${textColor}" opacity=".9">${escapeXml(category)}</text>
           ${titleSvg}
           ${subtitleSvg}
-          <line x1="405" y1="960" x2="495" y2="960"
-            stroke="${textColor}" stroke-opacity=".75" stroke-width="2"/>
-          <text x="450" y="1040" text-anchor="middle" font-family="Arial,sans-serif"
-            font-size="25" font-weight="bold" letter-spacing="5"
-            fill="${textColor}">${escapeXml(author.toUpperCase())}</text>
+          <line x1="${centerX - 45}" y1="${height * .78}" x2="${centerX + 45}"
+            y2="${height * .78}" stroke="${textColor}" stroke-opacity=".75" stroke-width="2"/>
+          <text x="${centerX}" y="${height * .85}" text-anchor="middle"
+            font-family="Arial,sans-serif" font-size="25" font-weight="bold"
+            letter-spacing="4" fill="${textColor}">${escapeXml(author.toUpperCase())}</text>
         </svg>`;
     }
 
     $("#downloadButton").addEventListener("click", () => {
-      const svgBlob = new Blob([coverSvg()], {
-        type: "image/svg+xml;charset=utf-8"
-      });
+      const svgBlob = new Blob([coverSvg()], { type: "image/svg+xml;charset=utf-8" });
       const svgUrl = URL.createObjectURL(svgBlob);
       const image = new Image();
 
       image.onload = () => {
         const canvas = document.createElement("canvas");
-        canvas.width = 900;
-        canvas.height = 1350;
+        canvas.width = image.naturalWidth || 900;
+        canvas.height = image.naturalHeight || 1350;
 
         const context = canvas.getContext("2d");
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -860,14 +1010,14 @@
           URL.revokeObjectURL(svgUrl);
 
           if (!pngBlob) {
-            alert("Sorry, the cover couldn't be downloaded. Please try again.");
+            alert("Sorry, the artwork couldn't be downloaded. Please try again.");
             return;
           }
 
           const pngUrl = URL.createObjectURL(pngBlob);
           const link = document.createElement("a");
           link.href = pngUrl;
-          link.download = "bookness-cover.png";
+          link.download = `bookness-${currentFormat}.png`;
           link.click();
           setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
         }, "image/png");
@@ -875,15 +1025,13 @@
 
       image.onerror = () => {
         URL.revokeObjectURL(svgUrl);
-        alert("Sorry, the cover couldn't be downloaded. Please try again.");
+        alert("Sorry, the artwork couldn't be downloaded. Please try again.");
       };
 
       image.src = svgUrl;
     });
 
-    updateCover();
-
-    // Simple local demo authentication.
+    // Demo login and sign-up: accounts stay in this browser only.
     (() => {
       const authScreen = $("#authScreen");
       const authForm = $("#authForm");
@@ -904,7 +1052,6 @@
       function showApp(user) {
         authScreen.hidden = true;
         logoutButton.hidden = false;
-        logoutButton.textContent = "Log out";
         logoutButton.title = "Logged in as " + user;
       }
 
@@ -915,11 +1062,10 @@
         signingUp = !signingUp;
         authForm.classList.toggle("signing-up", signingUp);
 
-        $("#authTitle").textContent =
-          signingUp ? "Create your account" : "Welcome back";
+        $("#authTitle").textContent = signingUp ? "Create your account" : "Welcome back";
         $("#authDescription").textContent = signingUp
-          ? "Sign up to start creating your book covers."
-          : "Log in to keep creating beautiful book covers.";
+          ? "Sign up to start creating your artwork."
+          : "Log in to keep creating beautiful artwork.";
         $("#authSubmit").textContent = signingUp ? "Sign up" : "Log in";
         $("#togglePrompt").textContent =
           signingUp ? "Already have an account?" : "New to Bookness?";
@@ -977,7 +1123,7 @@
 
         $("#authTitle").textContent = "Welcome back";
         $("#authDescription").textContent =
-          "Log in to keep creating beautiful book covers.";
+          "Log in to keep creating beautiful artwork.";
         $("#authSubmit").textContent = "Log in";
         $("#togglePrompt").textContent = "New to Bookness?";
         $("#toggleAuth").textContent = "Create an account";
@@ -986,6 +1132,8 @@
         authScreen.hidden = false;
       });
     })();
+
+    setFormat("book");
   </script>
 </body>
 </html>
